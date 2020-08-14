@@ -1,20 +1,13 @@
-import smtplib
-import time
 import requests
 from bs4 import BeautifulSoup
-
+import smtplib
+import time
 
 url = "https://www.moneycontrol.com/"
 
-headers = {
-    "user-agent": 'enter your user agent(you can get it from google)'
 
-
-}
-
-
-def check():
-    page = requests.get(url, headers=headers)
+def lambda_handler(event, context):
+    page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     title = "MARKET ACTION NIFTY 50"
@@ -23,31 +16,29 @@ def check():
     cp = price.replace(",", "")
     print(title.strip())
     print(cp)
-    if float(cp) > 9000:
-        send_mail(cp)
+    if float(cp) < 12000:
+        send_mail()
 
 
-def send_mail(cp):
+def send_mail():
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
     server.ehlo()
 
-    server.login('sender mail id', 'sender login essential')
+    server.login('netflixfreekahai@gmail.com', 'ulyxjyxzosmdtmsi')
 
     subject = "Nifty 50 Price Updated"
-    body = f"check the link https://www.moneycontrol.com/ \nCurrent Price:{cp}"
+    body = 'check the link https://www.moneycontrol.com/'
     msg = f"Subject: {subject}\n\n{body}"
 
     server.sendmail(
-        'sender mail id',
-        'reciver mail id',
+        'netflixfreekahai@gmail.com',
+        'rohanvivek.singh@gmail.com',
         msg
     )
     print("mail sent!!")
     server.quit()
 
 
-while True:
-    check()
-    time.sleep(100)
+
